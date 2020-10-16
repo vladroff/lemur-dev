@@ -1,0 +1,47 @@
+---
+version: '2.0'
+services:
+  frontend:
+    build:
+      dockerfile: Dockerfile-frontend
+      context: .
+    volumes:
+      - "./lemur/lemur:/app/lemur"
+    depends_on:
+      - backend
+    command: npx gulp serve
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+
+  backend:
+    build:
+      dockerfile: Dockerfile-backend
+      context: .
+    volumes:
+      # mapping only lemur directory to avoid overwriting some files
+      # that result in lemur package not being fully installed
+      - "./lemur/lemur:/app/lemur"
+    links:
+      - postgres
+    depends_on:
+      - postgres
+      - redis
+#    command: tail -f /dev/null
+    command: lemur runserver --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: lemur
+      POSTGRES_PASSWORD: lemur
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"

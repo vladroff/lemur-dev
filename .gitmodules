@@ -1,0 +1,6 @@
+[submodule "lemur"]
+	path = lemur
+	url = https://github.com/vladroff/lemur.git
+[submodule "lemur-ejbca-plugin"]
+	path = lemur-ejbca-plugin
+	url = https://github.com/c2company/lemur-ejbca-plugin.git
