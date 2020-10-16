@@ -1,8 +1,4 @@
 FROM python:3.7
-#RUN apt-get update
-#RUN apt-get install -y make software-properties-common curl
-#RUN apt-get update
-#RUN apt-get install -y npm libldap2-dev libsasl2-dev libssl-dev
 RUN apt-get update \
     && apt-get install -y libldap2-dev libsasl2-dev
 
@@ -17,4 +13,3 @@ COPY lemur.conf.py /root/.lemur/lemur.conf.py
 COPY lemur /app/
 
 RUN pip install -e .
-#RUN lemur init -p password
