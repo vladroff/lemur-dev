@@ -22,6 +22,7 @@ services:
       # mapping only lemur directory to avoid overwriting some files
       # that result in lemur package not being fully installed
       - "./lemur/lemur:/app/lemur"
+      - "./lemur-ejbca-plugin/lemur_ejbca:/app/lemur/plugins/lemur_ejbca"
     links:
       - postgres
     depends_on:

@@ -12,4 +12,10 @@ RUN mkdir /root/.lemur
 COPY lemur.conf.py /root/.lemur/lemur.conf.py
 COPY lemur /app/
 
+# Install ejbca plugin
+COPY lemur-ejbca-plugin/lemur_ejbca /app/lemur/plugins/lemur_ejbca
+COPY lemur-setup.py /app/setup.py
+COPY lemur-ejbca-plugin/requirements.txt /app/requirements-ejbca-plugin.txt
+
 RUN pip install -e .
+RUN pip install -r requirements-ejbca-plugin.txt
