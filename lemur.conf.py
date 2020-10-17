@@ -66,3 +66,25 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://lemur:lemur@postgres:5432/lemur'
 # VERISIGN_FIRST_NAME = ''
 # VERISIGN_LAST_NAME = ''
 # VERSIGN_EMAIL = ''
+
+#
+# EJBCA Plugin Configuration
+#
+
+EJBCA_SOURCE_EXPIRE_DAYS = 7300
+EJBCA_SOURCE_MAX_RESULTS = 100000
+EJBCA_URL = "https://it-ca01.pkihosted-dev.c2company.com/" #TODO get from env var
+
+EJBCA_CERT_PATH = "/usr/local/share/certs/lemur_ejbca"
+
+EJBCA_PEM_PATH = os.path.abspath(os.path.join(EJBCA_CERT_PATH, "clientcert.pem"))
+EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(EJBCA_CERT_PATH, "issuingca_admin.pem"))
+EJBCA_TRUSTSTORE = os.path.abspath(os.path.join(EJBCA_CERT_PATH, "truststore.pem"))
+
+EJBCA_INTERMEDIATE_ISSUINGCAG4 = ""
+with open(os.path.abspath(os.path.join(EJBCA_CERT_PATH, "intermediate.pem")), "r") as f:
+    EJBCA_INTERMEDIATE_ISSUINGCAG4 = f.read()
+
+EJBCA_ROOT = ""
+with open(os.path.abspath(os.path.join(EJBCA_CERT_PATH, "root.pem")), "r") as f:
+    EJBCA_ROOT = f.read()

@@ -5,3 +5,6 @@ init-lemur:
 
 start-lemur:
 	docker-compose up
+
+create-cert-volume:
+	tar -C ./certs -c -f- . | docker run --rm -i -v lemur_certs:/certs alpine tar -C /certs -xv -f-

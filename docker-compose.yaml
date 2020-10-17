@@ -1,5 +1,10 @@
 ---
 version: '2.0'
+
+volumes:
+  lemur_certs:
+    external: true
+
 services:
   frontend:
     build:
@@ -23,6 +28,7 @@ services:
       # that result in lemur package not being fully installed
       - "./lemur/lemur:/app/lemur"
       - "./lemur-ejbca-plugin/lemur_ejbca:/app/lemur/plugins/lemur_ejbca"
+      - "lemur_certs:/usr/local/share/certs"
     links:
       - postgres
     depends_on:
