@@ -23,3 +23,5 @@ To initialize Lemur database, run:
 ```shell script
 make init-lemur
 ```
+
+Open browser at `http://localhost:3000`
