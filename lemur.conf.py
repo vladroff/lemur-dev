@@ -1,7 +1,8 @@
-
 # This is just Python which means you can inherit and tweak settings
 
+import warnings
 import os
+
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
 THREADS_PER_PAGE = 8
@@ -46,7 +47,6 @@ METRIC_PROVIDERS = []
 LOG_LEVEL = "DEBUG"
 LOG_FILE = "lemur.log"
 
-
 # Database
 
 # modify this if you are not using a local database
@@ -54,7 +54,7 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://lemur:lemur@postgres:5432/lemur'
 
 # AWS
 
-#LEMUR_INSTANCE_PROFILE = 'Lemur'
+# LEMUR_INSTANCE_PROFILE = 'Lemur'
 
 # Issuers
 
@@ -73,7 +73,11 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://lemur:lemur@postgres:5432/lemur'
 
 EJBCA_SOURCE_EXPIRE_DAYS = 7300
 EJBCA_SOURCE_MAX_RESULTS = 100000
-EJBCA_URL = "https://it-ca01.pkihosted-dev.c2company.com/" #TODO get from env var
+
+EJBCA_URL = os.getenv('EJBCA_URL')
+
+if not EJBCA_URL:
+    warnings.warn("Required variable EJBCA_URL is missing")
 
 CERT_PATH = "/usr/local/share/certs/"
 
@@ -81,17 +85,20 @@ EJBCA_PEM_PATH = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/clientcert
 EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/issuingca_admin.pem"))
 EJBCA_TRUSTSTORE = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/truststore.pem"))
 
-EJBCA_INTERMEDIATE_ISSUINGCAG4 = ""
-try:
-    with open(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/intermediate.pem")), "r") as f:
-        EJBCA_INTERMEDIATE_ISSUINGCAG4 = f.read()
-except IOError as e:  # TODO
-    # Print warning
-    pass
 
-EJBCA_ROOT = ""
-try:
-    with open(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/root.pem")), "r") as f:
-        EJBCA_ROOT = f.read()
-except IOError as e:  # TODO
-    pass
+def getFileContent(filepath):
+    try:
+        with open(filepath, "r") as f:
+            return f.read()
+    except IOError:
+        return None
+
+
+EJBCA_INTERMEDIATE_ISSUINGCAG1 = getFileContent(
+    os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/intermediate.pem")))
+if not EJBCA_INTERMEDIATE_ISSUINGCAG1:
+    warnings.warn("Required certificate for EJBCA_INTERMEDIATE_ISSUINGCAG1 is missing")
+
+EJBCA_ROOT = getFileContent(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/root.pem")))
+if not EJBCA_ROOT:
+    warnings.warn("Required certificate for EJBCA_ROOT is missing")

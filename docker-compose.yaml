@@ -54,6 +54,8 @@ services:
     depends_on:
       - postgres
       - redis
+    environment:
+      EJBCA_URL: https://it-ca01.pkihosted-dev.c2company.com/
     command: lemur runserver -r -d --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
