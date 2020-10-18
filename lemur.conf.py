@@ -86,7 +86,7 @@ EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbc
 EJBCA_TRUSTSTORE = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/truststore.pem"))
 
 
-def getFileContent(filepath):
+def get_file_contents(filepath):
     try:
         with open(filepath, "r") as f:
             return f.read()
@@ -94,11 +94,11 @@ def getFileContent(filepath):
         return None
 
 
-EJBCA_INTERMEDIATE_ISSUINGCAG1 = getFileContent(
+EJBCA_INTERMEDIATE_ISSUINGCAG1 = get_file_contents(
     os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/intermediate.pem")))
 if not EJBCA_INTERMEDIATE_ISSUINGCAG1:
     warnings.warn("Required certificate for EJBCA_INTERMEDIATE_ISSUINGCAG1 is missing")
 
-EJBCA_ROOT = getFileContent(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/root.pem")))
+EJBCA_ROOT = get_file_contents(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/root.pem")))
 if not EJBCA_ROOT:
     warnings.warn("Required certificate for EJBCA_ROOT is missing")
