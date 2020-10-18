@@ -29,11 +29,11 @@ LEMUR_SECURITY_TEAM_EMAIL = []
 
 # Certificate Defaults
 
-LEMUR_DEFAULT_COUNTRY = ''
-LEMUR_DEFAULT_STATE = ''
-LEMUR_DEFAULT_LOCATION = ''
-LEMUR_DEFAULT_ORGANIZATION = ''
-LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = ''
+LEMUR_DEFAULT_COUNTRY = 'US'
+LEMUR_DEFAULT_STATE = 'CA'
+LEMUR_DEFAULT_LOCATION = 'Los Angeles'
+LEMUR_DEFAULT_ORGANIZATION = 'PrimeKey'
+LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = 'Operations'
 
 # Authentication Providers
 ACTIVE_PROVIDERS = []
@@ -75,16 +75,23 @@ EJBCA_SOURCE_EXPIRE_DAYS = 7300
 EJBCA_SOURCE_MAX_RESULTS = 100000
 EJBCA_URL = "https://it-ca01.pkihosted-dev.c2company.com/" #TODO get from env var
 
-EJBCA_CERT_PATH = "/usr/local/share/certs/lemur_ejbca"
+CERT_PATH = "/usr/local/share/certs/"
 
-EJBCA_PEM_PATH = os.path.abspath(os.path.join(EJBCA_CERT_PATH, "clientcert.pem"))
-EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(EJBCA_CERT_PATH, "issuingca_admin.pem"))
-EJBCA_TRUSTSTORE = os.path.abspath(os.path.join(EJBCA_CERT_PATH, "truststore.pem"))
+EJBCA_PEM_PATH = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/clientcert.pem"))
+EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/issuingca_admin.pem"))
+EJBCA_TRUSTSTORE = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/truststore.pem"))
 
 EJBCA_INTERMEDIATE_ISSUINGCAG4 = ""
-with open(os.path.abspath(os.path.join(EJBCA_CERT_PATH, "intermediate.pem")), "r") as f:
-    EJBCA_INTERMEDIATE_ISSUINGCAG4 = f.read()
+try:
+    with open(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/intermediate.pem")), "r") as f:
+        EJBCA_INTERMEDIATE_ISSUINGCAG4 = f.read()
+except IOError as e:  # TODO
+    # Print warning
+    pass
 
 EJBCA_ROOT = ""
-with open(os.path.abspath(os.path.join(EJBCA_CERT_PATH, "root.pem")), "r") as f:
-    EJBCA_ROOT = f.read()
+try:
+    with open(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/root.pem")), "r") as f:
+        EJBCA_ROOT = f.read()
+except IOError as e:  # TODO
+    pass

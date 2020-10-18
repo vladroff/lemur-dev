@@ -1,5 +1,4 @@
----
-version: '2.0'
+version: '3.8'
 
 volumes:
   lemur_certs:
@@ -11,7 +10,12 @@ services:
       dockerfile: Dockerfile-frontend
       context: .
     volumes:
-      - "./lemur/lemur:/app/lemur"
+      - type: bind
+        source: ./lemur/lemur/static
+        target: /app/lemur/static
+        read_only: true
+        volume:
+          nocopy: true
     depends_on:
       - backend
     command: npx gulp serve
@@ -26,15 +30,31 @@ services:
     volumes:
       # mapping only lemur directory to avoid overwriting some files
       # that result in lemur package not being fully installed
-      - "./lemur/lemur:/app/lemur"
-      - "./lemur-ejbca-plugin/lemur_ejbca:/app/lemur/plugins/lemur_ejbca"
-      - "lemur_certs:/usr/local/share/certs"
+      - type: bind
+        source: ./lemur/lemur
+        target: /app/lemur
+        read_only: false
+        consistency: delegated
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./lemur-ejbca-plugin/lemur_ejbca
+        target: /app/lemur/plugins/lemur_ejbca
+        read_only: true
+        volume:
+          nocopy: true
+      - type: volume
+        source: lemur_certs
+        target: /usr/local/share/certs
+        read_only: true
+        volume:
+          nocopy: true
     links:
       - postgres
     depends_on:
       - postgres
       - redis
-    command: lemur runserver -r --host 0.0.0.0 --port 8000
+    command: lemur runserver -r -d --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
 
