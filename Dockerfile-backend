@@ -1,4 +1,6 @@
-FROM python:3.7
+## Build step
+FROM python:3.7 as build
+
 RUN apt-get update \
     && apt-get install -y libldap2-dev libsasl2-dev
 
@@ -8,6 +10,18 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 WORKDIR /app
 
+COPY lemur/requirements*.txt ./
+COPY lemur-ejbca-plugin/requirements.txt ./requirements-ejbca-plugin.txt
+
+RUN pip install -r requirements.txt
+RUN pip install -r requirements-dev.txt
+RUN pip install -r requirements-docs.txt
+RUN pip install -r requirements-tests.txt
+RUN pip install -r requirements-ejbca-plugin.txt
+
+## Main
+FROM build as backend
+
 RUN mkdir /root/.lemur
 COPY lemur.conf.py /root/.lemur/lemur.conf.py
 COPY lemur /app/
@@ -15,7 +29,5 @@ COPY lemur /app/
 # Install ejbca plugin
 COPY lemur-ejbca-plugin/lemur_ejbca /app/lemur/plugins/lemur_ejbca
 COPY lemur-setup.py /app/setup.py
-COPY lemur-ejbca-plugin/requirements.txt /app/requirements-ejbca-plugin.txt
 
 RUN pip install -e .
-RUN pip install -r requirements-ejbca-plugin.txt
