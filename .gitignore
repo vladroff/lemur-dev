@@ -1,5 +1,6 @@
 **/__pycache__
 *.pem
+*.key
 /.cache
 .coverage
 .tox

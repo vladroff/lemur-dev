@@ -32,9 +32,9 @@ LEMUR_SECURITY_TEAM_EMAIL = []
 
 LEMUR_DEFAULT_COUNTRY = 'US'
 LEMUR_DEFAULT_STATE = ''
-LEMUR_DEFAULT_LOCATION = 'Los Angeles'
-LEMUR_DEFAULT_ORGANIZATION = 'PrimeKey'
-LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = 'Operations'
+LEMUR_DEFAULT_LOCATION = ''
+LEMUR_DEFAULT_ORGANIZATION = 'Internal Test'
+LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = 'Devices'
 
 # Authentication Providers
 ACTIVE_PROVIDERS = []
@@ -69,9 +69,17 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://lemur:lemur@postgres:5432/lemur'
 
 LEMUR_OWNER_EMAIL_IN_SUBJECT = False
 
+
 #
 # EJBCA Plugin Configuration
 #
+def get_file_contents(filepath):
+    try:
+        with open(filepath, "r") as f:
+            return f.read()
+    except IOError:
+        return None
+
 
 EJBCA_SOURCE_EXPIRE_DAYS = 7300
 EJBCA_SOURCE_MAX_RESULTS = 100000
@@ -83,24 +91,22 @@ if not EJBCA_URL:
 
 CERT_PATH = "/usr/local/share/certs/"
 
-EJBCA_PEM_PATH = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/clientcert.pem"))
-EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/issuingca_admin.pem"))
+# Client's private key
+EJBCA_PEM_PATH = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/client.key"))
+
+# Client's Private key + Client cert
+EJBCA_PEM_PATH_ISSUINGCAG1 = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/client.pem"))
+
+# Root CA cert + Issuing CA cert
 EJBCA_TRUSTSTORE = os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/truststore.pem"))
 
-
-def get_file_contents(filepath):
-    try:
-        with open(filepath, "r") as f:
-            return f.read()
-    except IOError:
-        return None
-
-
+# Issuing CA cert
 EJBCA_INTERMEDIATE_ISSUINGCAG1 = get_file_contents(
     os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/intermediate.pem")))
 if not EJBCA_INTERMEDIATE_ISSUINGCAG1:
     warnings.warn("Required certificate for EJBCA_INTERMEDIATE_ISSUINGCAG1 is missing")
 
+# Root CA cert
 EJBCA_ROOT = get_file_contents(os.path.abspath(os.path.join(CERT_PATH, "lemur_ejbca/root.pem")))
 if not EJBCA_ROOT:
     warnings.warn("Required certificate for EJBCA_ROOT is missing")
